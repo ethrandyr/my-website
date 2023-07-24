@@ -2,7 +2,7 @@
 const bookList = document.getElementById('bookList');
 
 function saveBookData(bookTitle, author) {
-  const existingData = JSON.parse(localStorage.getItem('bookData')) || [];
+  let existingData = JSON.parse(localStorage.getItem('bookData')) || [];
   const newData = {
     bookTitle: bookTitle,
     author: author,
