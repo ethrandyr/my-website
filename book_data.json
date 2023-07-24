@@ -1,0 +1,73 @@
+// scripts.js
+const bookList = document.getElementById('bookList');
+const githubUsername = 'your-username';
+const repositoryName = 'your-repository';
+
+async function saveBookData(bookTitle, author) {
+  const newData = {
+    bookTitle: bookTitle,
+    author: author,
+  };
+  
+  try {
+    // Replace 'YOUR-PERSONAL-ACCESS-TOKEN' with your GitHub personal access token
+    const response = await fetch(`https://api.github.com/repos/${githubUsername}/${repositoryName}/contents/book_data.json`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'token YOUR-PERSONAL-ACCESS-TOKEN',
+      },
+    });
+
+    const existingData = await response.json();
+    const decodedData = JSON.parse(atob(existingData.content));
+    decodedData.push(newData);
+
+    await fetch(`https://api.github.com/repos/${githubUsername}/${repositoryName}/contents/book_data.json`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'token YOUR-PERSONAL-ACCESS-TOKEN',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        message: 'Update book_data.json',
+        content: btoa(JSON.stringify(decodedData)),
+        sha: existingData.sha,
+      }),
+    });
+  } catch (error) {
+    console.error('Error saving book data:', error);
+  }
+}
+
+async function displayBookData() {
+  try {
+    const response = await fetch(`https://api.github.com/repos/${githubUsername}/${repositoryName}/contents/book_data.json`);
+    const data = await response.json();
+    const decodedData = JSON.parse(atob(data.content));
+
+    bookList.innerHTML = '';
+    decodedData.forEach((item) => {
+      const bookItem = document.createElement('li');
+      bookItem.innerHTML = `<strong>${item.bookTitle}</strong> by ${item.author}`;
+      bookList.appendChild(bookItem);
+    });
+  } catch (error) {
+    console.error('Error fetching book data:', error);
+  }
+}
+
+function addBook() {
+  const bookTitle = document.getElementById('bookTitle').value;
+  const author = document.getElementById('author').value;
+
+  if (bookTitle.trim() !== '' && author.trim() !== '') {
+    saveBookData(bookTitle, author)
+      .then(() => {
+        displayBookData();
+        document.getElementById('bookTitle').value = '';
+        document.getElementById('author').value = '';
+      });
+  }
+}
+
+window.onload = displayBookData;
