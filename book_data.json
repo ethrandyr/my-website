@@ -1,7 +1,7 @@
 // scripts.js
 const bookList = document.getElementById('bookList');
-const githubUsername = 'your-username';
-const repositoryName = 'your-repository';
+const githubUsername = ethrandyr;
+const repositoryName = my-website;
 
 async function saveBookData(bookTitle, author) {
   const newData = {
