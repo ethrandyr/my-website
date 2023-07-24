@@ -1,4 +1,6 @@
 // scripts.js
+const API_URL = 'https://sorvit.SerhanSarikan.repl.co/api/books';
+
 const bookList = document.getElementById('bookList');
 
 function saveBookData(bookTitle, author) {
