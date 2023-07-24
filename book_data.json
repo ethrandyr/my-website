@@ -10,7 +10,6 @@ async function saveBookData(bookTitle, author) {
   };
   
   try {
-    // Replace 'YOUR-PERSONAL-ACCESS-TOKEN' with your GitHub personal access token
     const response = await fetch(`https://api.github.com/repos/${githubUsername}/${repositoryName}/contents/book_data.json`, {
       method: 'GET',
       headers: {
